@@ -1,0 +1,269 @@
+#from algorithms import*
+import pygame, sys
+from pygame.locals import *
+
+
+#Graph :
+
+#1-) menu(surface)
+
+#2-) showBoard(surface, board)
+
+#3-) showPawn(surface, board, x, y, player )
+
+#4-) settings (surface)
+
+#5-) gameLoop(surface, board, x, y, numberPlayer)
+
+#6-) shootLaser(surface,board, x, y, laser)
+
+#7-) KhetLaserGamedef menu(surface, settingsInit):
+
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+
+
+def menu(surface, settingsInit):
+
+    fin = 1
+
+    while fin == 1  :
+
+        pygame.init()
+        fond = pygame.image.load("menu.jpg").convert()
+        surface.blit(fond, (0,0))
+        pygame.display.flip()
+
+        display = 0
+
+        settings = settingsInit
+
+        fontObj = pygame.font.SysFont('calibri',40)
+        
+        fontObjStart = pygame.font.SysFont('calibri',60)
+
+    #MENU : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        while display == 0: 
+            
+            textPlay = fontObj.render('Jouer', True, BLACK)
+            textOption = fontObj.render('Option de Jeu', True, BLACK)
+            textQuit  = fontObj.render('Quitter', True, BLACK)
+           
+
+            
+            rectanglePlay = textPlay.get_rect()
+            rectangleOption = textOption.get_rect()
+            rectangleQuit = textQuit.get_rect()
+           
+
+                   
+            rectanglePlay.topleft = (100, 250)
+            rectangleOption.topleft = (100, 350)
+            rectangleQuit.topleft = (100, 450)
+            
+
+            
+            surface.blit(textPlay, rectanglePlay)
+            surface.blit(textOption, rectangleOption)
+            surface.blit(textQuit, rectangleQuit)
+            
+            pygame.display.update()
+
+            for event in pygame.event.get():
+                if event.type == MOUSEBUTTONUP:
+                    
+                    if 100 < event.pos[0] < 200 and 250 < event.pos[1] < 280: #Jouer
+
+                        display = 1
+                    
+                    if 100 < event.pos[0] < 215 and 350 < event.pos[1] < 380: #Option de jeu
+                        
+                        display = 2
+      
+                    if 100 < event.pos[0] < 215 and 450 < event.pos[1] < 480: #Quitter
+                        
+                        display = 3
+
+                if event.type == QUIT:
+                    pygame.quit()
+
+
+    #MENU MAP : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            
+        while display == 1 : 
+        
+            
+            
+
+            for event in pygame.event.get():
+                if event.type == MOUSEBUTTONUP:
+
+                    fond = pygame.image.load("arene2.jpg").convert()
+                    surface.blit(fond, (0,0))
+                    
+                    if 950 < event.pos[0] < 1225 and 50 < event.pos[1] < 200: #Terrain1
+
+                        fond = pygame.image.load("arene1.jpg").convert()
+                        surface.blit(fond, (0,0))
+                        pygame.display.update()
+
+                        initMap = 1
+                        return initMap
+                    
+                    if 950 < event.pos[0] < 1225 and 250 < event.pos[1] < 375: #Terrain2
+                        
+                        fond = pygame.image.load("arene2.jpg").convert()
+                        surface.blit(fond, (0,0))
+                        pygame.display.update()
+
+                        initMap = 2
+                        return initMap
+      
+                    if 950 < event.pos[0] < 1225 and 450 < event.pos[1] < 725: #Terrain3
+                        
+                        fond = pygame.image.load("arene3.jpg").convert()
+                        surface.blit(fond, (0,0))
+                        pygame.display.update()
+
+                        initMap = 3
+                        return initMap
+
+                    if 10 < event.pos[0] < 110 and 10 < event.pos[1] < 110: #retour en arrière
+                        display = 0
+
+                    if 1170 < event.pos[0] < 1270 and 610 < event.pos[1] < 710: #Choix de l'équipe
+                        display = 2
+                        
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+            pygame.display.update()
+
+    #MENU PARAMETRE : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            
+        while display == 2 : 
+            
+            fond = pygame.image.load("optionDeJeu.jpg").convert()
+            surface.blit(fond, (0,0))
+            pygame.display.update()
+
+            textSon = fontObj.render('Son', True, BLACK)
+            textVideo = fontObj.render('Video', True, BLACK)
+            textLanguage  = fontObj.render('Langue', True, BLACK)
+           
+
+            
+            rectangleSon = textSon.get_rect()
+            rectangleVideo = textVideo.get_rect()
+            rectangleLanguage = textLanguage.get_rect()
+           
+
+                   
+            rectangleSon.topleft = (100, 250)
+            rectangleVideo.topleft = (100, 350)
+            rectangleLanguage.topleft = (100, 450)
+            
+
+            
+            surface.blit(textSon, rectangleSon)
+            surface.blit(textVideo, rectangleVideo)
+            surface.blit(textLanguage, rectangleLanguage)
+
+            pygame.display.update()
+            
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+
+    #MENU QUITTER : --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        while display == 3 : #Quitter OUI/NON
+            
+            fond = pygame.image.load("menuQuit.jpg").convert()
+            surface.blit(fond, (0,0))
+            pygame.display.update()
+            
+            for event in pygame.event.get():
+                if event.type == MOUSEBUTTONUP:
+                    
+                    if 400 < event.pos[0] < 500 and 525 < event.pos[1] < 575: #OUI
+                        pygame.quit()
+                            
+                    if 730 < event.pos[0] < 850 and 525 < event.pos[1] < 575: #NON
+                        display = 1
+
+                    for event in pygame.event.get():
+                        if event.type == QUIT:
+                            pygame.quit()
+    return initMap
+            
+def showBoard(surface, board,map):
+
+    LARGEUR = 128
+    HAUTEUR = 90
+    ECART=1
+
+    surface.fill(WHITE)
+
+    for ligne in range(8):
+        for colonne in range(10):
+            pygame.draw.rect(surface,BLACK,[(ECART + LARGEUR) * colonne + ECART,(ECART + HAUTEUR) * ligne + ECART,LARGEUR,HAUTEUR])
+            pygame.display.update()
+
+def showPawn(surface,board):
+
+    
+def select(surface,board,player):#a tester avec un vrai board
+
+    LARGEUR = 128
+    HAUTEUR = 90
+    ECART=1
+
+    enCours = True
+
+    while enCours:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                enCours = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+
+                # CHANGEMENT DE COORDONNES x,y VERS LA LISTE
+
+                x = pos[0] // (LARGEUR + ECART)
+                y = pos[1] // (HAUTEUR + ECART)
+
+                i = pos[0] // (LARGEUR + ECART)
+                j = pos[1] // (HAUTEUR + ECART)
+
+                # PLAYER PLACE UN PION
+                if possible(board,player,x,y,i,j)==True:
+                    return colonne, ligne             
+
+
+
+                
+
+
+pygame.init()
+
+surface = pygame.display.set_mode((1280,720))
+
+pygame.init()
+
+pygame.display.set_caption('KhetLaserGame')
+
+board=[]
+
+showBoard(surface,board,"Choix areneBase.jpg")
+
+inProgress = True
+while inProgress:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            inProgress = False
+    pygame.display.update()
+pygame.quit()
+
+
